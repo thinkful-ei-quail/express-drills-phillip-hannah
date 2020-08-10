@@ -42,10 +42,9 @@ app.get('/cipher', (req, res) => {
 
 app.get('/lotto', (req, res) => {
     const { numbers } = req.query;
-    console.log(numbers);
     
     const guesses = numbers.map(num => {
-        parseInt(num)
+        return parseInt(num)
     }) 
 
     if(!numbers) {
@@ -55,24 +54,23 @@ app.get('/lotto', (req, res) => {
     const winningNums = [];
     for(let i = 0; i < 6; i++) {
         const random = Math.floor(Math.random() * 20) + 1;
-        winningNums.push(random);
+        if (winningNums.indexOf(random) < 0) {
+            winningNums.push(random);
+        }
     }
 
-    let difference = winningNums.filter(num => !guesses.includes(num));
-    
-    if (difference < 4) {
+    let difference = winningNums.filter(num => guesses.includes(num));
+
+    if (difference.length < 4) {
         res.send('Sorry, you lose')
-    } else if(difference = 4) {
+    } else if(difference.length === 4) {
         res.send('Congratulations, you win a free ticket!')
-    } else if(difference = 5) {
+    } else if(difference.length === 5) {
         res.send('Congratulations! You win $100!')
     } else {
         res.send('Wow! Unbelievable! You could have won the mega millions!')
     }
 })
-
-
-
 
 app.listen(8000, () => {
     console.log('Express server is listening on port 8000!');
